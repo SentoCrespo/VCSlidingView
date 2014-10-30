@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55CF7DD51A024B41001B62D6 /* test.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 55CF7DD41A024B41001B62D6 /* test.jpeg */; };
 		9AC1347B1A00FE8B0088F5C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC1347A1A00FE8B0088F5C2 /* main.m */; };
 		9AC1347E1A00FE8B0088F5C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC1347D1A00FE8B0088F5C2 /* AppDelegate.m */; };
 		9AC134841A00FE8B0088F5C2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AC134821A00FE8B0088F5C2 /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		55CF7DD41A024B41001B62D6 /* test.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpeg; sourceTree = "<group>"; };
 		9AC134751A00FE8B0088F5C2 /* VCSlidingView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VCSlidingView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AC134791A00FE8B0088F5C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9AC1347A1A00FE8B0088F5C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -28,8 +30,6 @@
 		9AC134831A00FE8B0088F5C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9AC134851A00FE8B0088F5C2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9AC134881A00FE8B0088F5C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		9AC134931A00FE8B0088F5C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9AC134941A00FE8B0088F5C2 /* VCSlidingViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VCSlidingViewTests.m; sourceTree = "<group>"; };
 		9AC134A51A00FF2A0088F5C2 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		9AC134A61A00FF2A0088F5C2 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		9AC134AF1A00FF500088F5C2 /* ContentV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentV.h; sourceTree = "<group>"; };
@@ -55,7 +55,6 @@
 			isa = PBXGroup;
 			children = (
 				9AC134771A00FE8B0088F5C2 /* VCSlidingView */,
-				9AC134911A00FE8B0088F5C2 /* VCSlidingViewTests */,
 				9AC134761A00FE8B0088F5C2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +70,7 @@
 		9AC134771A00FE8B0088F5C2 /* VCSlidingView */ = {
 			isa = PBXGroup;
 			children = (
+				55CF7DD41A024B41001B62D6 /* test.jpeg */,
 				9AC1347C1A00FE8B0088F5C2 /* AppDelegate.h */,
 				9AC1347D1A00FE8B0088F5C2 /* AppDelegate.m */,
 				9AC134A41A00FF2A0088F5C2 /* Controllers */,
@@ -88,23 +88,6 @@
 			children = (
 				9AC134791A00FE8B0088F5C2 /* Info.plist */,
 				9AC1347A1A00FE8B0088F5C2 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		9AC134911A00FE8B0088F5C2 /* VCSlidingViewTests */ = {
-			isa = PBXGroup;
-			children = (
-				9AC134941A00FE8B0088F5C2 /* VCSlidingViewTests.m */,
-				9AC134921A00FE8B0088F5C2 /* Supporting Files */,
-			);
-			path = VCSlidingViewTests;
-			sourceTree = "<group>";
-		};
-		9AC134921A00FE8B0088F5C2 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				9AC134931A00FE8B0088F5C2 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -209,6 +192,7 @@
 				9AC134B71A00FF500088F5C2 /* ContentV.xib in Resources */,
 				9AC134891A00FE8B0088F5C2 /* LaunchScreen.xib in Resources */,
 				9AC134861A00FE8B0088F5C2 /* Images.xcassets in Resources */,
+				55CF7DD51A024B41001B62D6 /* test.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +352,7 @@
 				9AC1349A1A00FE8B0088F5C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

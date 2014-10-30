@@ -25,18 +25,20 @@
     
     [self initViews];
     
-    
+    self.view.backgroundColor = [UIColor orangeColor];
 }
 
 #pragma mark - Views
 
 - (void) initViews
 {
+    
     CGSize currentSize = self.view.frame.size;
     _overlayV = [[OverlayV alloc] initWithFrame:CGRectMake(0,
                                                            currentSize.height - 64,
                                                            currentSize.width,
-                                                           currentSize.height)];
+                                                           currentSize.height)];    
+    [self.view addSubview:_overlayV];
 }
 
 @end
