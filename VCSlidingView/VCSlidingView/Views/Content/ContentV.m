@@ -9,15 +9,36 @@
 
 #import "ContentV.h"
 
-@interface ContentV ()
+@interface ContentV () <UIScrollViewDelegate>
 
     @property (nonatomic, assign) BOOL dragging;
     @property (nonatomic, assign) BOOL shouldForwardScrollEvents;
+    @property (nonatomic, retain) UIScrollView *scrollView;
 
 @end
 
 @implementation ContentV
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self)
+    {
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 100, 100, 300)];
+        _scrollView.backgroundColor = [UIColor greenColor];
+        _scrollView.delegate = self;
+        _scrollView.layer.borderColor = [UIColor redColor].CGColor;
+        _scrollView.layer.borderWidth = 4.0f;
+        [self addSubview:_scrollView];
+        
+        UIImageView *v = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 80, 500)];
+        [v setImage:[UIImage imageNamed:@"test.jpeg"]];
+        v.contentMode = UIViewContentModeScaleToFill;
+        [_scrollView addSubview:v];
+        [_scrollView setContentSize:CGSizeMake(100, 500)];
+    }
+    return self;
+}
 
 
 #pragma mark - Scroll

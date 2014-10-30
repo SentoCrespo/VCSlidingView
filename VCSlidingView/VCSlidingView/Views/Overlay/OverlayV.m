@@ -13,14 +13,15 @@
 
 #define PEEKING_HEIGHT 30
 
-@interface OverlayV () <UIGestureRecognizerDelegate>
+@interface OverlayV () <UIGestureRecognizerDelegate, ContentVDelegate>
 
     @property (nonatomic, strong) UIDynamicAnimator *animator;
-    @property (nonatomic, strong) UICollisionBehavior *collisionTop;
-    @property (nonatomic, strong) UICollisionBehavior *collisionBottom;
+    @property (nonatomic, strong) UICollisionBehavior *boundaries;
     @property (nonatomic, strong) UISnapBehavior *snap;
+    @property (nonatomic, retain) UIDynamicItemBehavior *dynamicSelf;
+    @property (nonatomic, retain) UIGravityBehavior *gravity;
 
-
+    @property (nonatomic, retain) UIPanGestureRecognizer *pan;
     @property (nonatomic, strong) ContentV *contentV;
 
 
@@ -30,6 +31,8 @@
     @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
 
+- (void)loadBoundaries;
+- (void)addPanGestureRec;
 @end
 
 @implementation OverlayV
@@ -55,7 +58,6 @@
     self.backgroundColor = [UIColor blueColor];
     
     [self configureDynamicInitialization];
-    [self configurePanGesture];
     
     _contentV = [[ContentV alloc] initWithFrame:CGRectMake(0,
                                                            0,
@@ -65,42 +67,59 @@
     label.backgroundColor = [UIColor redColor];
     
     [_contentV addSubview:label];
+    _contentV.delegate = self;
     
     [_svContent setContentSize:_contentV.frame.size];
 
 
+    [self addSubview:_contentV];
 }
 
 
 - (void) configureDynamicInitialization
 {
-    _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
-    UIDynamicItemBehavior *itemBehaviour = [[UIDynamicItemBehavior alloc] initWithItems:@[self]];
-    itemBehaviour.elasticity = 0.6;
-    [_animator addBehavior:itemBehaviour];
+    _pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan)];
+    _pan.delegate = self;
+    _pan.cancelsTouchesInView = FALSE;
+    [self addPanGestureRec];
     
-    _collisionTop = [[UICollisionBehavior alloc] initWithItems:@[self]];
-    _collisionTop.translatesReferenceBoundsIntoBoundary = YES;
-    [_animator addBehavior:_collisionTop];
+    _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
     
-    UIGravityBehavior *gravity = [[UIGravityBehavior alloc] initWithItems:@[self]];
-    [_animator addBehavior:gravity];
+    _dynamicSelf = [[UIDynamicItemBehavior alloc] initWithItems:@[self]];
+    _dynamicSelf.allowsRotation = FALSE;
+    _dynamicSelf.elasticity = 0.0;
+    _gravity = [[UIGravityBehavior alloc] initWithItems:@[self]];
+    _gravity.gravityDirection = CGVectorMake(0.0, 1.0);
+    
+    _boundaries = [[UICollisionBehavior alloc] init];
+    [_boundaries addItem:self];
+    [self loadBoundaries];
+    
+    [_animator addBehavior:_gravity];
+    [_animator addBehavior:_dynamicSelf];
+    [_animator addBehavior:_boundaries];
+    
+}
+
+- (void)loadBoundaries
+{
+    CGFloat boundaryWidth = [UIScreen mainScreen].bounds.size.width;
+    [_boundaries addBoundaryWithIdentifier:@"upperwall"
+                                 fromPoint:CGPointMake(0, 20)
+                                   toPoint:CGPointMake(boundaryWidth, 20)]; //superview not set at this point
+    
+    CGFloat lowerDistance = [UIScreen mainScreen].bounds.size.height + self.frame.size.height - 64;
+    [_boundaries addBoundaryWithIdentifier:@"lowerwall"
+                                 fromPoint:CGPointMake(0, lowerDistance)
+                                   toPoint:CGPointMake(boundaryWidth, lowerDistance)];
 }
 
 
 #pragma mark - Pan Gesture
 
-- (void) configurePanGesture
-{
-    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan)];
-    _panGesture.delegate = self;
-    _panGesture.cancelsTouchesInView = FALSE;
-}
-
-
 - (void)handlePan
 {
-    [self handlePanFromPanGestureRecogniser:_panGesture];
+    [self handlePanFromPanGestureRecogniser:_pan];
 }
 
 - (void)handlePanFromPanGestureRecogniser:(UIPanGestureRecognizer *)pan
@@ -109,7 +128,8 @@
     
     CGRect r = self.frame;
     r.origin.y = r.origin.y + (d*0.057);
-    
+    r.origin.x = 0;
+    NSLog(@"%@", NSStringFromCGRect(r));
     if (r.origin.y < 20) {
         r.origin.y = 20;
     }
@@ -131,54 +151,60 @@
     }
 }
 
+- (void)addPanGestureRec
+{
+    if (![[self gestureRecognizers] containsObject:_pan])
+    {
+        [self addGestureRecognizer:_pan];
+    }
+}
 
 - (void)panGestureEnded
 {
+    [_animator removeBehavior:_snap];
     
-//    [_animator removeBehavior:_snap];
-//    
-//    CGPoint vel = [_dynamicSelf linearVelocityForItem:self];
-//    if (fabsf(vel.y) > 250.0) {
-//        if (vel.y < 0) {
-//            [self snapToTop];
-//        }
-//        else {
-//            [self snapToBottom];
-//        }
-//    }
-//    else {
-//        if (self.frame.origin.y > (self.superview.bounds.size.height/2)) {
-//            [self snapToBottom];
-//        }
-//        else {
-//            [self snapToTop];
-//        }
-//    }
+    CGPoint vel = [_dynamicSelf linearVelocityForItem:self];
+    if (fabsf(vel.y) > 250.0) {
+        if (vel.y < 0) {
+            [self snapToTop];
+        }
+        else {
+            [self snapToBottom];
+        }
+    }
+    else {
+        if (self.frame.origin.y > (self.superview.bounds.size.height/2)) {
+            [self snapToBottom];
+        }
+        else {
+            [self snapToTop];
+        }
+    }
     
 }
 
 
 #pragma mark - Snap
 
-- (void) snapToBottom
+- (void)snapToTop
 {
-    
+    _gravity.gravityDirection = CGVectorMake(0.0, -2.5);
 }
 
-- (void) snapToTop
+- (void)snapToBottom
 {
-    
+    _gravity.gravityDirection = CGVectorMake(0.0, 2.5);
 }
 
 
 
 
-- (void)theContentWrapper:(ContentV *)contentWrapper isForwardingGestureRecogniserTouches:(UIPanGestureRecognizer *)contentViewPan
+- (void)theContentWrapper:(ContentV *)contentView isForwardingGestureRecogniserTouches:(UIPanGestureRecognizer *)scrollPanGesture
 {
-    [self handlePanFromPanGestureRecogniser:contentViewPan];
+    [self handlePanFromPanGestureRecogniser:scrollPanGesture];
 }
 
-- (void)theContentWrapperStoppedBeingDragged:(ContentV *)contentWrapper
+- (void)theContentWrapperStoppedBeingDragged:(ContentV *)contentView
 {
     //because the scrollview internal pan doesn't tell use when it's state == ENDED
     [self panGestureEnded];

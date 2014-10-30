@@ -8,11 +8,19 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-
 #import "OverlayV.h"
+
+@class ContentV;
+
+@protocol ContentVDelegate <NSObject>
+
+- (void)theContentWrapperStoppedBeingDragged:(ContentV *)contentView;
+- (void)theContentWrapper:(ContentV *)contentView isForwardingGestureRecogniserTouches:(UIPanGestureRecognizer *)scrollPanGesture;
+
+@end
 
 @interface ContentV : UIView
 
-
+@property (nonatomic, assign) id<ContentVDelegate> delegate;
 
 @end
